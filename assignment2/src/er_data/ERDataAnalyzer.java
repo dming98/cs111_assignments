@@ -2,15 +2,12 @@ package er_data;
 
 
 public class ERDataAnalyzer {
-	
-	
-	/** 
-	 * If you find yourself writing the same code over and over, 
-	 * consider creating a private method which you can call instead.
-	 */
-	
 	// private methods here
-
+	// If you find yourself writing the same code over and over, 
+	// consider creating a private method which you can call instead.
+	final static int NUM_WEEKS = 4;
+	final static int NUM_DAYS = 7;
+	final static int NUM_HOURS = 24;
 	/**
 	 * Returns the total number of patients for each week
 	 * 
@@ -19,7 +16,16 @@ public class ERDataAnalyzer {
 	 * @return 		an 1-d integer array of weekly totals
 	 */
 	public static int[] patientsPerWeek(int[][][] data) {
+		int[] ppw = new int[NUM_WEEKS];
 		
+		for(int h=0;h<4;h++){
+			for(int j=0;j<7;j++){
+				for(int k=0;k<24;k++){
+					ppw[h] = ppw[h] + data[h][j][k];
+				}
+			}
+		}
+		return ppw;
 	}
 	
 	/**
@@ -29,7 +35,15 @@ public class ERDataAnalyzer {
 	 * @return		2-d integer array of daily totals. 1st dimension is the week, 2nd is the day
 	 */
 	public static int[][] patientsPerDayPerWeek(int[][][] data) {
-		
+		int[][] ppdpw = new int[NUM_WEEKS][NUM_DAYS];
+		for(int h=0;h<4;h++){
+			for(int j=0;j<7;j++){
+				for(int k=0;k<24;k++){
+					ppdpw[h][j] = ppdpw[h][j] + data[h][j][k];
+				}
+			}
+		}
+		return ppdpw;
 	}
 	
 	/**
@@ -43,7 +57,17 @@ public class ERDataAnalyzer {
 	 * @return 		1-d double array of the average number of daily patients for each week
 	 */
 	public static double[] averagePatientsPerWeek(int[][][] data) {
+		double[] appw = new double[NUM_WEEKS];
 		
+		for(int h=0;h<4;h++){
+			for(int j=0;j<7;j++){
+				for(int k=0;k<24;k++){
+					appw[h] = appw[h] + data[h][j][k];
+				}
+			}
+			appw[h] = appw[h]/NUM_DAYS;
+		}
+		return appw;
 	}
 	
 	/**
@@ -55,7 +79,16 @@ public class ERDataAnalyzer {
 	 * 				where the 1st dimension corresponds to the day
 	 */
 	public static double[] averagePatientsPerDayAcrossWeeks(int[][][] data) {
-		
+		double[] appdaw = new double[NUM_DAYS];
+		for(int j=0;j<7;j++){
+			for(int h=0;h<4;h++){
+				for(int k=0;k<24;k++){
+					appdaw[j] = appdaw[j] + data[h][j][k];
+				}
+			}
+			appdaw[j]= appdaw[j]/NUM_WEEKS;
+		}
+		return appdaw;
 	}
 	
 	/**
@@ -73,7 +106,21 @@ public class ERDataAnalyzer {
 	 *              week, the (or one of the) day(s) with the most visits 
 	 */
 	public static int[] busiestDayPerWeek(int[][][] data) {
-		
+		int[] bdpw = new int[NUM_WEEKS];
+		for(int h=0;h<4;h++){
+			int highest = 0;
+			int[] dailyTotal = new int[NUM_DAYS];
+			for(int j=0;j<7;j++){
+				for(int k=0;k<24;k++){
+					dailyTotal[j] = dailyTotal[j] + data[h][j][k];
+				}
+				if(dailyTotal[j]>highest){
+					highest = dailyTotal[j];
+					bdpw[h]=j;
+				}
+			}
+		}
+		return bdpw;
 	}
 	
 	/**
@@ -85,6 +132,20 @@ public class ERDataAnalyzer {
 	 * 				week, the (or one of the) day(s) with the fewest visits 
 	 */
 	public static int[] leastBusyDayPerWeek(int[][][] data) {
-		
+		int[] ldpw = new int[NUM_WEEKS];
+		for(int h=0;h<4;h++){
+			int lowest = Integer.MAX_VALUE;
+			int[] dailyTotal = new int[NUM_DAYS];
+			for(int j=0;j<7;j++){
+				for(int k=0;k<24;k++){
+					dailyTotal[j] = dailyTotal[j] + data[h][j][k];
+				}
+				if(dailyTotal[j]<lowest){
+					lowest = dailyTotal[j];
+					ldpw[h]=j;
+				}
+			}
+		}
+		return ldpw;	
 	}
 }
